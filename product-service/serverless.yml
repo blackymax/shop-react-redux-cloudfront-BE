@@ -1,0 +1,43 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+service: product-service
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: "dev"
+  region: eu-west-1
+
+functions:
+  healthcheck:
+    handler: src/functions/healthcheck.healthcheck
+    description: Healthcheck to ensure the service is up
+    events:
+      - http:
+          path: healthcheck
+          method: get
+          cors: true
+  getProductList:
+    handler: src/functions/getProductList.handler
+    description: getProductList to get products
+    events:
+      - http:
+          path: products
+          method: get
+          cors: true
+  getProductsById:
+    handler: src/functions/getProductsById.handler
+    description: get product by id from available list
+    events:
+      - http:
+          path: products/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+            
