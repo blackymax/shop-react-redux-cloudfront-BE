@@ -1,8 +1,7 @@
 {
   "name": "product-service",
   "version": "0.0.1",
-  "description": "A template for a Serverless API using Typescript and Jest",
-  "main": "functions/healthcheck.js",
+  "description": "serverless-typescript-jest",
   "scripts": {
     "test": "jest",
     "remove": "sls remove",
@@ -20,10 +19,8 @@
     "aws-sdk": "^2.1186.0",
     "axios": "^0.19.0",
     "jest": "^24.8.0",
-    "middy": "^0.36.0",
     "serverless-plugin-typescript": "^1.1.7",
     "serverless-stack-output": "^0.2.3",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.18.0"
+    "ts-jest": "^24.0.2"
   }
 }
