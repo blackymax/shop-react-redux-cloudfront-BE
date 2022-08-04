@@ -5,7 +5,9 @@ import { parsePathParameterString } from '../utils/parsePathParameterString';
 const getProductsById = async (event: any) => {
     const { id } = event.pathParameters;
     try {
-        const product = products.find((item) => item.id === parsePathParameterString(id));
+        const product = products.find(
+            (item) => item.id === parsePathParameterString(id)
+        );
         if (product) {
             return {
                 body: JSON.stringify(product),
@@ -21,7 +23,7 @@ const getProductsById = async (event: any) => {
         }
     } catch (error) {
         return {
-            body: JSON.stringify(id),
+            body: JSON.stringify(parsePathParameterString(id)),
             headers,
             statusCode: 404
         };
