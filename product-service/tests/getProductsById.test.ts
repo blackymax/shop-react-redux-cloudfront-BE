@@ -5,7 +5,7 @@ describe('getProductsById', () => {
     const testId = "7567ec4b-b10c-48c5-9345-fc73c48a80aa"
     describe('When id is correct', () => {
         test('getProductsById returns 200 OK', async () => {
-            await axios.get(`${API_URL}/products/id=${testId}`).then((response) => {
+            await axios.get(`${API_URL}/products/${testId}`).then((response) => {
                 expect(response.status).toBe(200)
             })
         })
