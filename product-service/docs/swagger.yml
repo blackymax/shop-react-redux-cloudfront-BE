@@ -3,7 +3,7 @@ info:
   title: Swagger Product Service
   version: 0.0.1
 servers:
-  - url: https://11fmspqgd8.execute-api.eu-west-1.amazonaws.com/dev
+  - url: https://fofi97wb0l.execute-api.eu-west-1.amazonaws.com/dev
 tags:
   - name: products
     description: Product Service domain
