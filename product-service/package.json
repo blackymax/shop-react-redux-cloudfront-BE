@@ -11,7 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "typescript": "^3.5.3",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "pg": "^8.7.3",
+    "@types/pg": "^8.6.5"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

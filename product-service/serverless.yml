@@ -5,11 +5,21 @@ service: product-service
 plugins:
   - serverless-plugin-typescript
 
+configValidationMode: warn
+
 provider:
   name: aws
   runtime: nodejs16.x
   stage: "dev"
   region: eu-west-1
+  profile: aws
+  environment:
+    PG_HOST: awsdb.c2cf02vn1xvw.eu-west-1.rds.amazonaws.com
+    PG_PORT: 5432
+    PG_DB_NAME: awsdb
+    PG_USERNAME: postgres
+    PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+
 
 functions:
   healthcheck:
@@ -40,4 +50,16 @@ functions:
             parameters:
               paths:
                 id: true
+  pgLambdaInit:
+    handler: src/functions/pgLambdaInit.handler
+    description: create tables of data
+  createProduct:
+    handler: src/functions/createProduct.handler
+    description: create product
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
+              
             
