@@ -26,6 +26,26 @@ paths:
                   $ref: '#/components/schemas/Product'          
         '503':
           description: Internal server error
+  /products:
+    post:
+      tags:
+        - products
+      summary: Returns created product
+      description: Multiple status values can be provided with comma separated strings
+      operationId: getProductList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Product'
+                  - $ref: '#/components/schemas/Stocks' 
+                discriminator:
+                  propertyName: items      
+        '503':
+          description: Internal server error
   /products/{id}:
     get:
       tags:
@@ -49,11 +69,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Product'          
-        '400':
-          description: Invalid tag value
+                oneOf:
+                  - $ref: '#/components/schemas/Product'
+                  - $ref: '#/components/schemas/Stocks' 
+                discriminator:
+                  propertyName: item          
+        '404':
+          description: Not Found
 components:
   schemas:
     Product:
@@ -72,3 +94,13 @@ components:
         title:
           type: string
           example: Title
+    Stock:
+      type: object
+      properties:
+        product_id:
+          type: string
+          example: 7567ec4b-b10c-48c5-9345-fc73c48a80a3
+        count:
+          type: integer
+          format: int32
+          example: 2

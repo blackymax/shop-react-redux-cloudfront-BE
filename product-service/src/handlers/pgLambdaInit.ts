@@ -1,6 +1,7 @@
 import { Client } from 'pg';
 import { ClientConfig } from 'pg';
 import { headers, TABLE_NAMES } from '../constants';
+import { HttpResponse } from '../helpers/http-response';
 
 const { PG_HOST, PG_PORT, PG_DB_NAME, PG_USERNAME, PG_PASSWORD } = process.env;
 
@@ -62,18 +63,10 @@ export const handler = async (event: any) => {
         `)
 
         const { rows: listOfProducts } = await client.query(`select * from ${TABLE_NAMES.products}`);
-        return {
-            body: listOfProducts,
-            headers,
-            statusCode: 200
-        };
+        return HttpResponse.success(listOfProducts);
 
     } catch (err) {
-        return {
-            body: `No executed${err}`,
-            headers,
-            statusCode: 404
-        };
+        return HttpResponse.serverError(err);
     } finally {
         client.end()
     }

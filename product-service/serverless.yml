@@ -22,16 +22,8 @@ provider:
 
 
 functions:
-  healthcheck:
-    handler: src/functions/healthcheck.healthcheck
-    description: Healthcheck to ensure the service is up
-    events:
-      - http:
-          path: healthcheck
-          method: get
-          cors: true
   getProductList:
-    handler: src/functions/getProductList.handler
+    handler: src/handlers/getProductList.handler
     description: getProductList to get products
     events:
       - http:
@@ -39,7 +31,7 @@ functions:
           method: get
           cors: true
   getProductsById:
-    handler: src/functions/getProductsById.handler
+    handler: src/handlers/getProductsById.handler
     description: get product by id from available list
     events:
       - http:
@@ -51,10 +43,10 @@ functions:
               paths:
                 id: true
   pgLambdaInit:
-    handler: src/functions/pgLambdaInit.handler
+    handler: src/handlers/pgLambdaInit.handler
     description: create tables of data
   createProduct:
-    handler: src/functions/createProduct.handler
+    handler: src/handlers/createProduct.handler
     description: create product
     events:
       - http:

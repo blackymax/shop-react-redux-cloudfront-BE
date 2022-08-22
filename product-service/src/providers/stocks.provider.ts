@@ -1,8 +1,7 @@
-import { Client } from 'pg';
-import { dbOptions, TABLE_NAMES } from '../constants';
+import { TABLE_NAMES } from '../constants';
 import { connectToDB } from '../utils/dbconnect';
 
-class StocksService {
+class StocksProvider {
     async createStock(count: number, product_id: string) {
         const client = await connectToDB();
         const { rows } = await client.query(
@@ -25,6 +24,6 @@ class StocksService {
     }
 }
 
-const stocksService = new StocksService();
+const stocksProvider = new StocksProvider();
 
-export default stocksService;
+export default stocksProvider;
