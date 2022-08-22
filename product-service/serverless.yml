@@ -12,16 +12,8 @@ provider:
   region: eu-west-1
 
 functions:
-  healthcheck:
-    handler: src/functions/healthcheck.healthcheck
-    description: Healthcheck to ensure the service is up
-    events:
-      - http:
-          path: healthcheck
-          method: get
-          cors: true
   getProductList:
-    handler: src/functions/getProductList.handler
+    handler: src/handlers/getProductList.handler
     description: getProductList to get products
     events:
       - http:
@@ -29,7 +21,7 @@ functions:
           method: get
           cors: true
   getProductsById:
-    handler: src/functions/getProductsById.handler
+    handler: src/handlers/getProductsById.handler
     description: get product by id from available list
     events:
       - http:
