@@ -2,11 +2,13 @@ import { HttpResponse } from '../helpers/http-response';
 // import productProvider from '../providers/product.provider';
 // import stocksProvider from '../providers/stocks.provider';
 import productProviderDynamoDB from '../dynamodb-providers/product.provider'
+import { isJson } from '../utils/isJson';
 
 export const handler = async (event: any) => {
-    console.log(event)
-    const { title, price, description, count } = event.body;
-
+    const data = isJson(event.body) ? JSON.parse(event.body) : event.body 
+    console.log(data)
+    const { title, price, description, count } = data;
+    console.log(title, description, price, count)
     try {
         // const product = await productProvider.createProduct(title, description, price)
         // stocksProvider.createStock(count, product.id)
