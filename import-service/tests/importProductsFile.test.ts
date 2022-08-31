@@ -13,7 +13,7 @@ describe('importProductsFile', () => {
                 name: mockedFileName
             }
         };
-        test('getProductsById should return 200 OK', async () => {
+        test('importProductsFile should return 200 OK', async () => {
             const result = await handler(mockedEvent);
             expect(result).toEqual(HttpResponse.success(mockedFileName));
         });
