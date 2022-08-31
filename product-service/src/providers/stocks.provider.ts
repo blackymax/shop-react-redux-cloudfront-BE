@@ -1,9 +1,9 @@
 import { TABLE_NAMES } from '../constants';
-import { connectToDB } from '../utils/dbconnect';
+import { connectToPGDB } from '../utils/pgdb.connect';
 
 class StocksProvider {
     async createStock(count: number, product_id: string) {
-        const client = await connectToDB();
+        const client = await connectToPGDB();
         const { rows } = await client.query(
             `
             insert into ${TABLE_NAMES.stocks}(count, product_id) values
@@ -15,7 +15,7 @@ class StocksProvider {
     }
 
     async getStock(product_id: string) {
-        const client = await connectToDB();
+        const client = await connectToPGDB();
         const { rows } = await client.query(
             `select * from ${TABLE_NAMES.stocks} where id=$1`,
             [product_id]

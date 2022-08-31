@@ -4,6 +4,7 @@ service: product-service
 
 plugins:
   - serverless-plugin-typescript
+  - serverless-dynamodb-local
 
 configValidationMode: warn
 
@@ -14,11 +15,19 @@ provider:
   region: eu-west-1
   profile: aws
   environment:
+    DYNAMO_DB_TABLE_NAME: ProductsTable
     PG_HOST: awsdb.c2cf02vn1xvw.eu-west-1.rds.amazonaws.com
     PG_PORT: 5432
     PG_DB_NAME: awsdb
     PG_USERNAME: postgres
     PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+    iam:
+      role: 
+        statements:
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:*"
+            Resource: !GetAtt ProductsTable.Arn
 
 
 functions:
@@ -53,5 +62,23 @@ functions:
           path: products
           method: post
           cors: true
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMO_DB_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        
+
               
             
