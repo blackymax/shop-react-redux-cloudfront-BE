@@ -21,13 +21,13 @@ provider:
     PG_DB_NAME: awsdb
     PG_USERNAME: postgres
     PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
-    iam:
-      role: 
-        statements:
-          - Effect: "Allow"
-            Action:
-              - "dynamodb:*"
-            Resource: !GetAtt ProductsTable.Arn
+  iam:
+    role: 
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:*"
+          Resource: !GetAtt ProductsTable.Arn
 
 
 functions:
