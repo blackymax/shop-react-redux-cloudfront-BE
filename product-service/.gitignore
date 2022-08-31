@@ -3,5 +3,3 @@ node_modules
 
 # Serverless directories
 .serverless
-
-.build
