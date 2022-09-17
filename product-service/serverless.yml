@@ -54,6 +54,9 @@ functions:
   pgLambdaInit:
     handler: src/handlers/pgLambdaInit.handler
     description: create tables of data
+  dynamoDBInit:
+    handler: src/handlers/dynamoDBInit.handler
+    description: create tables of data
   createProduct:
     handler: src/handlers/createProduct.handler
     description: create product
