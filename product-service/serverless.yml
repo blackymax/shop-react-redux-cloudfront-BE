@@ -21,6 +21,8 @@ provider:
     PG_DB_NAME: awsdb
     PG_USERNAME: postgres
     PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+    SQS_URL: SQSQueue
+    SNS_ARN: SNSTopic
   iam:
     role: 
       statements:
@@ -28,6 +30,15 @@ provider:
           Action:
             - "dynamodb:*"
           Resource: !GetAtt ProductsTable.Arn
+        - Effect: "Allow"
+          Action:
+            - "sqs:*"
+          Resource: !GetAtt SQSQueue.Arn
+        - Effect: "Allow"
+          Action:
+            - "sns:*"
+          Resource:
+            Ref: SNSTopic
 
 
 functions:
@@ -54,6 +65,17 @@ functions:
   pgLambdaInit:
     handler: src/handlers/pgLambdaInit.handler
     description: create tables of data
+  catalogBatchProcess:
+    handler: src/handlers/catalogBatchProcess.handler
+    description: catalogBatchProcess triggered by an SQS event
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - SQSQueue
+              - Arn
+
   createProduct:
     handler: src/handlers/createProduct.handler
     description: create product
@@ -78,6 +100,25 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: awsmaksimch@gmail.com
+        Protocol: email
+        FilterPolicy:
+          title: 
+          - title
+          - Title
+        TopicArn: 
+          Ref: SNSTopic
         
 
               

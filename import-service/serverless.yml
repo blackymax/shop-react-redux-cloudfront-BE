@@ -9,6 +9,7 @@ configValidationMode: warn
 
 custom:
   s3BucketName: maksim-charnou-products-files
+  sqsQueueName: catalogItemsQueue
 
 provider:
     name: aws
@@ -21,9 +22,9 @@ provider:
             statements:
                 - Effect: 'Allow'
                   Action:
-                    - 's3:ListBucket'
-                  Resource:
-                    - "arn:aws:s3:::${self:custom.s3BucketName}"
+                    - 'sqs:*'
+                  Resource: 
+                    - "arn:aws:sqs:eu-west-1:673313573473:catalogItemsQueue"
                 - Effect: Allow
                   Action: "s3:*"
                   Resource:
@@ -57,4 +58,3 @@ functions:
               rules:
                 - prefix: uploaded/
               existing: true
-            
