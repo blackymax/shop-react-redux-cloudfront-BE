@@ -1,0 +1,87 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+service: product-service
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+
+configValidationMode: warn
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: "dev"
+  region: eu-west-1
+  profile: aws
+  environment:
+    DYNAMO_DB_TABLE_NAME: ProductsTable
+    PG_HOST: awsdb.c2cf02vn1xvw.eu-west-1.rds.amazonaws.com
+    PG_PORT: 5432
+    PG_DB_NAME: awsdb
+    PG_USERNAME: postgres
+    PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+  iam:
+    role: 
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:*"
+          Resource: !GetAtt ProductsTable.Arn
+
+
+functions:
+  getProductList:
+    handler: src/handlers/getProductList.handler
+    description: getProductList to get products
+    events:
+      - http:
+          path: products
+          method: get
+          cors: true
+  getProductsById:
+    handler: src/handlers/getProductsById.handler
+    description: get product by id from available list
+    events:
+      - http:
+          path: products/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+  pgLambdaInit:
+    handler: src/handlers/pgLambdaInit.handler
+    description: create tables of data
+  dynamoDBInit:
+    handler: src/handlers/dynamoDBInit.handler
+    description: create tables of data
+  createProduct:
+    handler: src/handlers/createProduct.handler
+    description: create product
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMO_DB_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        
+
+              
+            
