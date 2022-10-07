@@ -1,0 +1,43 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+service: authorization-service
+
+plugins:
+    - serverless-plugin-typescript
+    - serverless-dotenv-plugin
+
+configValidationMode: warn
+
+custom:
+  s3BucketName: maksim-charnou-products-files
+  sqsQueueName: catalogItemsQueue
+
+provider:
+    name: aws
+    runtime: nodejs16.x
+    stage: 'dev'
+    region: eu-west-1
+    profile: aws
+    iam:
+        role: 
+            statements:
+                - Effect: 'Allow'
+                  Action:
+                    - 'sqs:*'
+                  Resource: 
+                    - "arn:aws:sqs:eu-west-1:673313573473:catalogItemsQueue"
+                - Effect: Allow
+                  Action: "s3:*"
+                  Resource:
+                    - "arn:aws:s3:::${self:custom.s3BucketName}/*"
+    environment:
+        PG_HOST: awsdb.c2cf02vn1xvw.eu-west-1.rds.amazonaws.com
+        PG_PORT: 5432
+        PG_DB_NAME: awsdb
+        PG_USERNAME: postgres
+        PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+
+functions:
+    basicAuthorizer:
+        handler: src/handlers/basicAuthorizer.handler
+        description: importProductsFile

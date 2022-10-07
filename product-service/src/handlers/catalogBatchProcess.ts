@@ -48,8 +48,8 @@ const catalogBatchProcess = (event: any, context: any, cb: any) => {
                     console.log('SNS:DATA: ' + JSON.stringify(data));
                 }
             })
-            cb(null, HttpResponse.success({}));
         });
+        cb(null, HttpResponse.success({}));
     } catch (err) {
         cb(null, HttpResponse.serverError(err));
     }
