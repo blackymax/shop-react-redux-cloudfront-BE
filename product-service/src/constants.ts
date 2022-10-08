@@ -1,12 +1,13 @@
+import { HttpHeaders } from 'aws-sdk/clients/iot';
 import { ClientConfig } from 'pg';
 
 const { PG_HOST, PG_PORT, PG_DB_NAME, PG_USERNAME, PG_PASSWORD } = process.env;
 
 export const DYNAMO_DB_TABLE_NAME = process.env.DYNAMO_DB_TABLE_NAME || "ProductsTable";
 
-export const headers = {
+export const headers: HttpHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Credentials': '*',
     'Access-Control-Allow-Headers': '*'
 };
 

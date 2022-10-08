@@ -115,10 +115,6 @@ resources:
       Properties:
         Endpoint: awsmaksimch@gmail.com
         Protocol: email
-        FilterPolicy:
-          title: 
-          - title
-          - Title
         TopicArn: 
           Ref: SNSTopic
         

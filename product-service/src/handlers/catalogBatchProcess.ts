@@ -1,57 +1,50 @@
-import { SNS } from 'aws-sdk';
-import { PublishInput } from 'aws-sdk/clients/sns';
+import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
+import { SQSEvent } from 'aws-lambda';
 import productProviderDynamoDB from '../dynamodb-providers/product.provider';
 import { HttpResponse } from '../helpers/http-response';
-import { isJson } from '../utils/isJson';
 
-const catalogBatchProcess = (event: any, context: any, cb: any) => {
-    const sns = new SNS();
+const sns = new SNSClient({region: 'eu-west-1'});
+
+const catalogBatchProcess = async (event: SQSEvent) => {
     const products = event.Records;
     try {
-        products.forEach(async (data: any) => {
-            const product = isJson(data.messageAttributes)
-                ? JSON.parse(data.messageAttributes)
-                : data.messageAttributes;
+        for await (const data of products) {
+            console.log(data)
+            const product = data.messageAttributes;
             
             console.log('Data: ' + JSON.stringify(data));
             console.log('Product: ' + JSON.stringify(data.body));
 
             const productNew = {
-                title: product.title.stringValue,
-                description: product.description.stringValue,
-                price: product.price.stringValue,
-                count: product.count.stringValue
+                title: product.title.stringValue || '',
+                description: product.description.stringValue || '',
+                price: +(product.price.stringValue || ''),
+                count: +(product.price.stringValue || '')
             };
             const { title, description, price, count } = productNew;
 
             console.log(title, description, price, count);
 
-            productProviderDynamoDB.createProduct(
+            await productProviderDynamoDB.createProduct(
                 title,
                 description,
                 price,
                 count
             );
+            console.log(process.env.SNS_ARN)
 
-            const publishParams: PublishInput = {
+            const publishCommand: PublishCommand = new PublishCommand({
                 Subject: 'Products has been created',
-                Message: "Success",
-                MessageAttributes: data.messageAttributes,
+                Message: `Successfully added`,
                 TopicArn: 'arn:aws:sns:eu-west-1:673313573473:createProductTopic',
-                
-            };
+            });
 
-            sns.publish(publishParams, (err, data) => {
-                if (err) {
-                    console.log('SNS:ERROR: ' + JSON.stringify(err));
-                } else {
-                    console.log('SNS:DATA: ' + JSON.stringify(data));
-                }
-            })
-        });
-        cb(null, HttpResponse.success({}));
+            const d = await sns.send(publishCommand)
+            console.log(JSON.stringify(d))
+        };
+        return HttpResponse.success({});
     } catch (err) {
-        cb(null, HttpResponse.serverError(err));
+        return HttpResponse.serverError(err);
     }
 };
 

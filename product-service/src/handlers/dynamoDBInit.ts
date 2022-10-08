@@ -1,4 +1,3 @@
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { v4 } from 'uuid';
 import { DYNAMO_DB_TABLE_NAME } from '../constants';
 import { connectToDynamoDB } from '../utils/dynamodb.connect';

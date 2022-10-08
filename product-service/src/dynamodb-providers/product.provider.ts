@@ -2,10 +2,6 @@ import { DYNAMO_DB_TABLE_NAME, TABLE_NAMES } from '../constants';
 import { connectToDynamoDB } from '../utils/dynamodb.connect';
 import { v4 } from 'uuid';
 import {
-    GetItemInput,
-    GetItemOutput,
-    ListTablesInput,
-    PutItemInput,
     ScanInput
 } from 'aws-sdk/clients/dynamodb';
 
@@ -49,7 +45,7 @@ class ProductProviderDynamoDB {
         }
     }
 
-    async getProductById(id: string) {
+    async getProductById(id?: string) {
         try {
             const client = await connectToDynamoDB();
             const params = {
