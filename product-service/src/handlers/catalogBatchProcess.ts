@@ -36,7 +36,7 @@ const catalogBatchProcess = async (event: SQSEvent) => {
             const publishCommand: PublishCommand = new PublishCommand({
                 Subject: 'Products has been created',
                 Message: `Successfully added`,
-                TopicArn: 'arn:aws:sns:eu-west-1:673313573473:createProductTopic',
+                TopicArn: process.env.SNS_ARN,
             });
 
             const d = await sns.send(publishCommand)
