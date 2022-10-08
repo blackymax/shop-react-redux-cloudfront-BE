@@ -22,7 +22,7 @@ provider:
     PG_USERNAME: postgres
     PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
     SQS_URL: SQSQueue
-    SNS_ARN: SNSTopic
+    SNS_ARN: !Ref SNSTopic
   iam:
     role: 
       statements:
