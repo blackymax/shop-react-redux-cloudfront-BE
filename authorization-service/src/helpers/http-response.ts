@@ -11,6 +11,16 @@ export const HttpResponse = {
       body: JSON.stringify({}),
       headers,
     }),
+    noToken: <T>(data: T = {} as T): any => ({
+      statusCode: 401,
+      body: JSON.stringify(data),
+      headers,
+    }),
+    unauthorized: <T>(data: T = {} as T): any => ({
+      statusCode: 200,
+      body: JSON.stringify(data),
+      headers,
+    }),
     success: <T>(data: T = {} as T): any => ({
       statusCode: 200,
       body: JSON.stringify(data),

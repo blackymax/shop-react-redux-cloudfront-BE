@@ -1,21 +1,19 @@
-import { S3 } from 'aws-sdk';
-import { CreateBucketConfiguration } from 'aws-sdk/clients/s3control';
-import { BUCKET_NAME, BUCKET_POLICY } from '../constants';
+import { APIGatewayAuthorizerEvent, Context } from 'aws-lambda';
+import { HttpResponse } from '../helpers/http-response';
 import { generatePolicy } from '../utils/generatePolicy';
 
-const basicAuthorizer = async (event: any, ctx: any, cb: any) => {
+const basicAuthorizer = async (event: APIGatewayAuthorizerEvent, context: Context) => {
     console.log(`Event: ${JSON.stringify(event)}`)
-    // if (event['type'] !== 'TOKEN') cb('Unauthorized')
-
+    if (event?.type !== 'TOKEN') return HttpResponse.noToken('Unauthorized')
 
     try {
-        const authToken = event.authorizationToken;
+        const authToken = event?.authorizationToken;
 
-        const encodedCreds = authToken.split('.')[1]
+        const encodedCreds = authToken.split(' ')[1]
         console.log(encodedCreds)
         const buff = Buffer.from(encodedCreds, 'base64')
-        const plainCreds = JSON.parse(buff.toString('utf-8'));
-        const {username, password} = plainCreds
+        const plainCreds = buff.toString('utf-8').split(':');
+        const [username, password] = plainCreds
 
         console.log(plainCreds)
     
@@ -23,10 +21,10 @@ const basicAuthorizer = async (event: any, ctx: any, cb: any) => {
         const effect = !storedUserPassword || (storedUserPassword !== password) ? 'Deny' : 'Allow'
     
         const policy = generatePolicy(encodedCreds, event.methodArn, effect);
-    
-        cb(null, policy)
+        console.log(JSON.stringify(policy))
+        return policy
     } catch (err) {
-        cb(`Unauthorized : ${err.message}`)
+        return HttpResponse.unauthorized(`Unauthorized : ${err.message}`)
     }
 };
 

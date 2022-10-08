@@ -21,15 +21,13 @@ provider:
     iam:
         role: 
             statements:
-                - Effect: 'Allow'
-                  Action:
-                    - 'sqs:*'
-                  Resource: 
-                    - "arn:aws:sqs:eu-west-1:673313573473:catalogItemsQueue"
                 - Effect: Allow
-                  Action: "s3:*"
-                  Resource:
-                    - "arn:aws:s3:::${self:custom.s3BucketName}/*"
+                  Action: 
+                    - "s3:*"
+                    - "dynamodb:*"
+                    - "sqs:*"
+                    - "sns:*"
+                  Resource: "*"
     environment:
         PG_HOST: awsdb.c2cf02vn1xvw.eu-west-1.rds.amazonaws.com
         PG_PORT: 5432

@@ -36,6 +36,7 @@ provider:
         PG_USERNAME: postgres
         PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
         SQS_QUEUE_URL: "arn:aws:sqs:eu-west-1:673313573473:catalogItemsQueue"
+        AUTHORIZER_ARN: arn:aws:lambda:eu-west-1:673313573473:function:authorization-service-dev-basicAuthorizer
 
 functions:
     importProductsFile:
@@ -46,6 +47,10 @@ functions:
                   path: import
                   method: get
                   cors: true
+                  authorizer:
+                    arn: ${self:provider.environment.AUTHORIZER_ARN}
+                    identitySource: method.request.header.Authorization
+                    type: token
                   request:
                       parameters:
                           querystrings:

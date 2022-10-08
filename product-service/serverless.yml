@@ -23,6 +23,7 @@ provider:
     PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
     SQS_URL: SQSQueue
     SNS_ARN: !Ref SNSTopic
+    AUTHORIZER_ARN: arn:aws:lambda:eu-west-1:673313573473:function:authorization-service-dev-basicAuthorizer
   iam:
     role: 
       statements:
