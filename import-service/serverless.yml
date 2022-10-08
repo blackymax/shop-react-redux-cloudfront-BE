@@ -35,6 +35,7 @@ provider:
         PG_DB_NAME: awsdb
         PG_USERNAME: postgres
         PG_PASSWORD: 0dwrJFVYpcjXCKBMpccN
+        SQS_QUEUE_URL: "arn:aws:sqs:eu-west-1:673313573473:catalogItemsQueue"
 
 functions:
     importProductsFile:

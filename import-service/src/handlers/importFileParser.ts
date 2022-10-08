@@ -1,19 +1,34 @@
 import { S3, SQS } from 'aws-sdk';
+
 import { BUCKET_NAME } from '../constants';
 import { parse } from 'csv-parse';
-import { MessageAttributeValue } from 'aws-sdk/clients/sqs';
 import { buildMessageAttributes } from '../utils/buildMessageAttrs';
+import { S3EventRecord } from 'aws-lambda';
 
-const importFileParser = (event: any) => {
-    const s3 = new S3({ region: 'eu-west-1' });
-    const sqs = new SQS();
+const sqs = new SQS();
+const s3 = new S3({ region: 'eu-west-1' });
+
+const region = process.env.SQS_QUEUE_URL?.split(':')[3]
+const queueId = process.env.SQS_QUEUE_URL?.split(':')[4]
+const queueName = process.env.SQS_QUEUE_URL?.split(':')[5]
+
+type S3FilesUploadEvent = {
+    Records: S3EventRecord[]
+}
+
+const importFileParser = (event: S3FilesUploadEvent) => {
 
     const key = event.Records[0].s3.object.key;
 
-    const params = {
+    console.log(event)
+
+    const params:S3.GetObjectRequest = {
         Bucket: BUCKET_NAME,
-        Key: key
+        Key: key,
+        
     };
+
+    console.log(key)
 
     const stream = s3.getObject(params).createReadStream();
 
@@ -23,10 +38,10 @@ const importFileParser = (event: any) => {
         .on('data', (chunk) => {
             const [title, description, price, count] = chunk;
             const messageattrs = buildMessageAttributes(title, description, price, count);
+            console.log('SQS ARN', process.env.SQS_QUEUE_URL)
             sqs.sendMessage(
                 {
-                    QueueUrl:
-                        'https://sqs.eu-west-1.amazonaws.com/673313573473/catalogItemsQueue',
+                    QueueUrl: `https://sqs.${region}.amazonaws.com/${queueId}/${queueName}`,
                     MessageBody: "Current product was created",
                     MessageAttributes: messageattrs
                 },

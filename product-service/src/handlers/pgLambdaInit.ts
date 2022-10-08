@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 import { ClientConfig } from 'pg';
-import { headers, TABLE_NAMES } from '../constants';
+import { TABLE_NAMES } from '../constants';
 import { HttpResponse } from '../helpers/http-response';
 
 const { PG_HOST, PG_PORT, PG_DB_NAME, PG_USERNAME, PG_PASSWORD } = process.env;
@@ -17,7 +17,7 @@ const dbOptions: ClientConfig = {
     connectionTimeoutMillis: 2000
 };
 
-export const handler = async (event: any) => {
+export const handler = async () => {
     const client = new Client(dbOptions);
     await client.connect()
     try {
