@@ -111,13 +111,26 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: createProductTopic
-    SNSSubscription:
+    SNSLowCountSubscription:
       Type: AWS::SNS::Subscription
       Properties:
         Endpoint: awsmaksimch@gmail.com
         Protocol: email
         TopicArn: 
           Ref: SNSTopic
+        FilterPolicy: {
+          "count": [{"numeric": ["<=", 5]}]
+        }
+    SNSHighCountSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: maxmin3007@gmail.com
+        Protocol: email
+        TopicArn: 
+          Ref: SNSTopic
+        FilterPolicy: {
+          "count": [{"numeric": [">", 5]}]
+        }
         
 
               
