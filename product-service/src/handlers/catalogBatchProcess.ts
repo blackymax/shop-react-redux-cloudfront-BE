@@ -19,7 +19,7 @@ const catalogBatchProcess = async (event: SQSEvent) => {
                 title: product.title.stringValue || '',
                 description: product.description.stringValue || '',
                 price: +(product.price.stringValue || ''),
-                count: +(product.price.stringValue || '')
+                count: +(product.count.stringValue || '')
             };
             const { title, description, price, count } = productNew;
 
@@ -35,8 +35,14 @@ const catalogBatchProcess = async (event: SQSEvent) => {
 
             const publishCommand: PublishCommand = new PublishCommand({
                 Subject: 'Products has been created',
-                Message: `Successfully added`,
+                Message: JSON.stringify(productNew),
                 TopicArn: process.env.SNS_ARN,
+                MessageAttributes: {
+                    count: {
+                        DataType: "Number",
+                        StringValue: data.messageAttributes.count.stringValue
+                    }
+                },
             });
 
             const d = await sns.send(publishCommand)
