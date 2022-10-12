@@ -1,0 +1,34 @@
+{
+  "name": "product-service",
+  "version": "0.0.1",
+  "description": "serverless-typescript-jest",
+  "scripts": {
+    "test": "jest",
+    "remove": "sls remove",
+    "deploy": "sls deploy",
+    "deploy:prod": "sls deploy --stage production"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.186.0",
+    "@types/pg": "^8.6.5",
+    "@types/uuid": "^8.3.4",
+    "pg": "^8.7.3",
+    "serverless-dynamodb-local": "^0.2.40",
+    "typescript": "^3.5.3",
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.106",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^24.0.15",
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1186.0",
+    "axios": "^0.19.0",
+    "jest": "^24.8.0",
+    "serverless-plugin-typescript": "^1.1.7",
+    "serverless-stack-output": "^0.2.3",
+    "ts-jest": "^24.0.2"
+  }
+}
