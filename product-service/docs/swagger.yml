@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Swagger Product Service
+  version: 0.0.1
+servers:
+  - url: https://tz2cj9yrgd.execute-api.eu-west-1.amazonaws.com/dev
+tags:
+  - name: products
+    description: Product Service domain
+paths:
+  /products:
+    get:
+      tags:
+        - products
+      summary: Returns products list
+      description: Multiple status values can be provided with comma separated strings
+      operationId: getProductList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'          
+        '503':
+          description: Internal server error
+  /products:
+    post:
+      tags:
+        - products
+      summary: Returns created product
+      description: Multiple status values can be provided with comma separated strings
+      operationId: getProductList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Product'
+                  - $ref: '#/components/schemas/Stocks' 
+                discriminator:
+                  propertyName: items      
+        '503':
+          description: Internal server error
+  /products/{id}:
+    get:
+      tags:
+        - products
+      summary: Finds Product by ID
+      description: Returns requested product.
+      operationId: getProductsById
+      parameters:
+        - name: id
+          in: path
+          description: Tags to filter by
+          required: true
+          explode: true
+          schema:
+            type: string
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Product'
+                  - $ref: '#/components/schemas/Stocks' 
+                discriminator:
+                  propertyName: item          
+        '404':
+          description: Not Found
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 7567ec4b-b10c-48c5-9345-fc73c48a80a3
+        description:
+          type: string
+          example: Short Product Description
+        price:
+          type: integer
+          format: int32
+          example: 32
+        title:
+          type: string
+          example: Title
+    Stock:
+      type: object
+      properties:
+        product_id:
+          type: string
+          example: 7567ec4b-b10c-48c5-9345-fc73c48a80a3
+        count:
+          type: integer
+          format: int32
+          example: 2
